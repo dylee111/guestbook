@@ -38,7 +38,7 @@ dependencies {
     implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-java8time', version: '3.0.4.RELEASE'
 
     // https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
-    implementation group: 'com.querydsl', name: 'querydsl-jpa', version: '5.0.0'
+    implementation 'com.querydsl:querydsl-jpa'
 
 }
 
@@ -47,6 +47,7 @@ test {
 }
 
 def querydslDir = "$buildDir/generated/querydsl"
+
 querydsl {
     jpa = true
     querydslSourcesDir = querydslDir
