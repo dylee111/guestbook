@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<!-- ~ : 내가 속한 리소스 , @ : template에 포한된 경우 -->
+<th:block th:replace="~{/layout/basic :: setContent( ~{this::content} )}">
+    <th:block th:fragment="content">
+        <h1 class="mt-4">Guestbook Register Page</h1>
+
+        <form th:action="@{/guestbook/register}" th:method="post">
+            <!-- Title -->
+            <div class="form-group">
+                <label>Title</label>
+                                                        <!-- ★name : GuestbookDTO의 변수 이름과 동일해야 함.-->
+                <input type="text" class="form-control" name="title" placeholder="Enter Title">
+            </div>
+
+            <!-- Content -->
+            <div class="form-group">
+                <label>Content</label>
+                <!-- ★name : GuestbookDTO의 변수 이름과 동일해야 함.-->
+                <textarea class="form-control" name="content" rows="5"></textarea>
+            </div>
+
+            <!-- Writer -->
+            <div class="form-group">
+            <label>Writer</label>
+            <!-- ★name : GuestbookDTO의 변수 이름과 동일해야 함.-->
+            <input type="text" class="form-control" name="writer" placeholder="Enter Writer">
+        </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+        </form>
+    </th:block>
+</th:block>
+</html>

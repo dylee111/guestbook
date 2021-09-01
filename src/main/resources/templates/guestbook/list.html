@@ -1,7 +1,79 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<th:block th:replace="~{/layout/basic :: setContent(~{this::content})}">
+<!-- ~ : 내가 속한 리소스 , @ : template에 포한된 경우 -->
+<th:block th:replace="~{/layout/basic :: setContent( ~{this::content} )}">
     <th:block th:fragment="content">
-        <h1>GuestBook List Page</h1>
+        <h1 class="mt-4">GuestBook List Page</h1>
+
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Title</th>
+                <th scope="col">Writer</th>
+                <th scope="col">Regdate</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="dto : ${result.dtoList}">
+                <th scope="row">[[${dto.gno}]]</th>
+                <td>[[${dto.title}]]</td>
+                <td>[[${dto.writer}]]</td>
+                <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
+            </tr>
+            </tbody>
+        </table> <!-- Table End -->
+
+        <ul class="pagination h-100 justify-content-center align-items-center">
+            <!-- prev -->
+            <li class="page-item" th:if="${result.prev}">
+                <a class="page-link" th:href="@{/guestbook/list(page = ${result.start -1})}" tabindex="-1">Previous</a>
+            </li>
+            <!-- Current Page -->
+            <li th:class=" 'page-item ' + ${result.page == page?'active':''}" th:each="page: ${result.pageList}">
+                <a class="page-link" th:href="@{/guestbook/list(page = ${page})}">
+                    [[${page}]]
+                </a>
+            </li>
+            <!-- next -->
+            <li class="page-item" th:if="${result.next}">
+                <a class="page-link" th:href="@{/guestbook/list(page = ${result.end +1})}">Next</a>
+            </li>
+        </ul> <!-- Ul End -->
+
+
+
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="/resources/demos/style.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+        <!-- Modal -->
+        <div id="dialog-confirm" title="Registered">
+            <p>[[${msg}]]번 글이 등록되었습니다.</p>
+        </div>
+
+        <script th:inline="javascript">
+            var msg = [[${msg}]];
+            console.log(msg);
+            if(msg) {
+               $( "#dialog-confirm" ).dialog({
+                  resizable: false,
+                  height: "auto",
+                  width: 400,
+                  modal: true,
+                  buttons: {
+                    "Delete all items": function() {
+                      $( this ).dialog( "close" );
+                    },
+                    Cancel: function() {
+                      $( this ).dialog( "close" );
+                    }
+                  }
+                });
+           }
+        </script>
     </th:block>
 </th:block>
+</html>
