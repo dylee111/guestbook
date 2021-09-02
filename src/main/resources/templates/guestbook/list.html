@@ -1,9 +1,15 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
 <!-- ~ : 내가 속한 리소스 , @ : template에 포한된 경우 -->
 <th:block th:replace="~{/layout/basic :: setContent( ~{this::content} )}">
     <th:block th:fragment="content">
-        <h1 class="mt-4">GuestBook List Page</h1>
+
+        <h1 class="mt-4">GuestBook List Page
+            <a th:href="@{/guestbook/register}">
+                <button class="btn btn-outline-primary" id="">게시글 등록</button>
+            </a>
+        </h1>
 
         <table class="table table-striped">
             <thead>
@@ -16,8 +22,11 @@
             </thead>
 
             <tbody>
-            <tr th:each="dto : ${result.dtoList}">
-                <th scope="row">[[${dto.gno}]]</th>
+            <tr th:each="dto : ${result.dtoList}" class="tr-list"
+                th:onclick="|javascript:read('${dto.gno}','${result.page}')|">
+                <th scope="row">
+                    <a th:href="@{/guestbook/read(gno=${dto.gno})}">[[${dto.gno}]]</a>
+                </th>
                 <td>[[${dto.title}]]</td>
                 <td>[[${dto.writer}]]</td>
                 <td>[[${#temporals.format(dto.regDate, 'yyyy/MM/dd')}]]</td>
@@ -42,38 +51,46 @@
             </li>
         </ul> <!-- Ul End -->
 
-
-
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-        <link rel="stylesheet" href="/resources/demos/style.css">
-        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
         <!-- Modal -->
-        <div id="dialog-confirm" title="Registered">
-            <p>[[${msg}]]번 글이 등록되었습니다.</p>
+        <div class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">등록되었습니다.</h5>
+                        <button type="button" class="btn btn-close" data-dismiss="modal" aria-label="Close"/>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalMsg"> 번 글이 등록되었습니다.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <!--<button type="button" class="btn btn-primary">Save changes</button>-->
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <script th:inline="javascript">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    </th:block>
+</th:block>
+<script th:inline="javascript">
             var msg = [[${msg}]];
             console.log(msg);
             if(msg) {
-               $( "#dialog-confirm" ).dialog({
-                  resizable: false,
-                  height: "auto",
-                  width: 400,
-                  modal: true,
-                  buttons: {
-                    "Delete all items": function() {
-                      $( this ).dialog( "close" );
-                    },
-                    Cancel: function() {
-                      $( this ).dialog( "close" );
-                    }
-                  }
-                });
+               $('#modalMsg').prepend(msg);
+               $('.modal').modal();
            }
+
+        function read(gno, page) {
+            /*[+
+            var urlword = [[@{/guestbook/read}]] + "?gno=" + gno + "&page=" + page;
+            +]*/
+            console.log(urlword);
+            <!-- url 주소 입력 방식 : /*[[@{/guestbook/read}]]*/  -->
+
+            location.href=urlword;
+        }
         </script>
-    </th:block>
-</th:block>
 </html>

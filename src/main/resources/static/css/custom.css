@@ -1,0 +1,12 @@
+.tr-list {
+    cursor: pointer;
+
+}
+
+.tr-list:hover {
+    background-color: #c7e4ff;
+}
+
+a {
+    text-decoration: none;
+}
