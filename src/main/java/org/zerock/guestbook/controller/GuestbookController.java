@@ -22,7 +22,7 @@ public class GuestbookController {
 
     private final GuestbookService service;
 
-    @GetMapping({"/"})
+    @GetMapping({"/",""})
     public String index() {
         return "redirect:/guestbook/list";
     }
@@ -47,14 +47,18 @@ public class GuestbookController {
         Long gno = service.register(dto);
         // addFlashAttribute : 1회성으로 데이터를 전달하는 용도로 사용.
         redirectAttributes.addFlashAttribute("msg",gno);
+        redirectAttributes.addFlashAttribute("noti", "등록");
 
         return "redirect:/guestbook/list";
     }
 
     @GetMapping({"/read", "/modify"})
-    public void read(long gno, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
-            GuestbookDTO dto = service.read(gno);
-            model.addAttribute("dto",dto);
+    public void read(Long gno, @ModelAttribute("requestDTO") PageRequestDTO requestDTO, Model model) {
+        log.info("gno : " + gno);
+        // read() : service 인터페이스에서 선언되고 serviceImpl에서 구현된 메서드
+        GuestbookDTO dto = service.read(gno);
+        // "dto"라는 이름으로 dto에 저장된 값을 넘김.
+        model.addAttribute("dto", dto);
     }
 
     @PostMapping("/modify")
@@ -69,11 +73,11 @@ public class GuestbookController {
     }
 
     @PostMapping("/remove")
-    public String remove(long gno, RedirectAttributes redirectAttributes) {
+    public String remove(Long gno, RedirectAttributes redirectAttributes) {
         log.info("gno : " + gno);
         service.remove(gno);
-        redirectAttributes.
-                addFlashAttribute("msg", gno);
+        redirectAttributes.addFlashAttribute("msg", gno);
+        redirectAttributes.addFlashAttribute("noti", "삭제");
         return "redirect:/guestbook/list";
     }
 
