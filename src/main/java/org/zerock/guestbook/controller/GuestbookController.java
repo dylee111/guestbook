@@ -49,6 +49,7 @@ public class GuestbookController {
         redirectAttributes.addFlashAttribute("msg",gno);
         redirectAttributes.addFlashAttribute("noti", "등록");
 
+        // redirect 시에 해당 URL로 이동
         return "redirect:/guestbook/list";
     }
 
@@ -67,6 +68,8 @@ public class GuestbookController {
 
         service.modify(dto);
         redirectAttributes.addAttribute("page", requestDTO.getPage());
+        redirectAttributes.addAttribute("type", requestDTO.getType());
+        redirectAttributes.addAttribute("keyword", requestDTO.getKeyword());
         redirectAttributes.addAttribute("gno", dto.getGno());
 
         return "redirect:/guestbook/read";

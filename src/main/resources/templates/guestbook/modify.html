@@ -8,6 +8,9 @@
 
         <!-- 페이지 번호 -->
         <input type="hidden" th:value="${requestDTO.page}" name="page" />
+        <input type="hidden" th:value="${requestDTO.type}" name="type" />
+        <input type="hidden" th:value="${requestDTO.keyword}" name="keyword" />
+
         <!-- GNO (수정 X) -->
         <div class="form-group">
             <label>글 번호</label>
@@ -83,10 +86,17 @@ name을 DB의 컬럼명과 동일하게 맞추면 정상적으로 실행이 된�
 
             $(".listBtn").click(function() {
                                    <!--속성 선택자-->
-                var pageInfo = $("input[name='page']");
+<!--                var pageInfo = $("input[name='page']");-->
+                var page = $("input[name='page']");
+                var type = $("input[name='type']");
+                var keyword = $("input[name='keyword']");
 
-                actionForm.empty();
-                actionForm.append(pageInfo);
+                actionForm.empty(); <!--form 태그의 모든 내용을 지움-->
+
+                actionForm.append(page);
+                actionForm.append(type);
+                actionForm.append(keyword);
+
                 actionForm
                     .attr("action", "/guestbook/list")
                     .attr("method", "get");
