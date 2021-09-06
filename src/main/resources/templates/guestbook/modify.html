@@ -42,10 +42,10 @@
         <!-- Reg Date (수정 X) -->
         <div class="form-group">
             <label>등록 날짜</label>
-<!-- LocalDateTime으로 데이터가 넘어가야하는데 아래의 코드는 String으로 데이터가 넘어가게 된다.
-그렇기 때문에 name 속성을 이용하게 되면 Tpye이 맞지 않아 tpyeMismatch 에러가 발생.
-regDate와 같은 시간 타입은 화면에서 DTO로 수집할 필요가 없다.
-name을 DB의 컬럼명과 동일하게 맞추면 정상적으로 실행이 된다. -->
+        <!-- LocalDateTime으로 데이터가 넘어가야하는데 아래의 코드는 String으로 데이터가 넘어가게 된다.
+        그렇기 때문에 name 속성을 이용하게 되면 Tpye이 맞지 않아 tpyeMismatch 에러가 발생.
+        regDate와 같은 시간 타입은 화면에서 DTO로 수집할 필요가 없다.
+        name을 DB의 컬럼명과 동일하게 맞추면 정상적으로 실행이 된다. -->
             <input type="text" class="form-control"
                 th:value="${#temporals.format(dto.regDate, 'yyyy/MM/dd HH:mm:ss')}" readonly>
         </div>
@@ -69,6 +69,7 @@ name을 DB의 컬럼명과 동일하게 맞추면 정상적으로 실행이 된�
             var actionForm = $("form");
 
             $(".removeBtn").click(function() {
+
                 actionForm.attr("action", "/guestbook/remove").attr("method", "post");
 
                 actionForm.submit();
@@ -85,8 +86,7 @@ name을 DB의 컬럼명과 동일하게 맞추면 정상적으로 실행이 된�
             });
 
             $(".listBtn").click(function() {
-                                   <!--속성 선택자-->
-<!--                var pageInfo = $("input[name='page']");-->
+                           <!--속성 선택자-->
                 var page = $("input[name='page']");
                 var type = $("input[name='type']");
                 var keyword = $("input[name='keyword']");
@@ -101,7 +101,6 @@ name을 DB의 컬럼명과 동일하게 맞추면 정상적으로 실행이 된�
                     .attr("action", "/guestbook/list")
                     .attr("method", "get");
 
-                console.log(actionForm.html());
                 actionForm.submit();
             });
         </script>

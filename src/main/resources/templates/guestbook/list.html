@@ -18,10 +18,10 @@
                     <select class="custom-select" name="type">
                         <option th:selected="${pageRequestDTO.type == null}">------</option>
                         <option value="t" th:selected="${pageRequestDTO.type == 't'}">제목</option>
-                        <option value="t" th:selected="${pageRequestDTO.type == 'c'}">내용</option>
-                        <option value="t" th:selected="${pageRequestDTO.type == 'w'}">작성자</option>
-                        <option value="t" th:selected="${pageRequestDTO.type == 'tc'}">제목 + 내용</option>
-                        <option value="t" th:selected="${pageRequestDTO.type == 'tcw'}">제목 + 내용 + 작성자</option>
+                        <option value="c" th:selected="${pageRequestDTO.type == 'c'}">내용</option>
+                        <option value="w" th:selected="${pageRequestDTO.type == 'w'}">작성자</option>
+                        <option value="tc" th:selected="${pageRequestDTO.type == 'tc'}">제목 + 내용</option>
+                        <option value="tcw" th:selected="${pageRequestDTO.type == 'tcw'}">제목 + 내용 + 작성자</option>
                     </select>
                 </div>
                 <input class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}" />
@@ -44,7 +44,11 @@
 
             <tbody>
             <tr th:each="dto : ${result.dtoList}" class="tr-list"
-                th:onclick="|javascript:read('${dto.gno}','${result.page}')|">
+                th:data-type="${pageRequestDTO.type}"
+                th:data-keyword="${pageRequestDTO.keyword}"
+                th:onclick="|javascript:read('${dto.gno}','${result.page}',this.getAttribute('data-type'),this.getAttribute('data-keyword'))|">
+<!--                 th:onclick="read(this.getAttribute('data-gno'),this.getAttribute('data-page'),this.getAttribute('data-type'),this.getAttribute('data-keyword'))">-->
+                <!-- this는 자신이 속한 tr을 의미. -->
                 <th scope="row">
                     <a th:href="@{/guestbook/read(gno=${dto.gno}, page=${result.page}, type=${pageRequestDTO.type},
                     keyword=${pageRequestDTO.keyword} )}">[[${dto.gno}]]</a>
@@ -60,20 +64,21 @@
         <ul class="pagination h-100 justify-content-center align-items-center">
             <!-- prev -->
             <li class="page-item" th:if="${result.prev}">
-                <a class="page-link" th:href="@{/guestbook/list(page = ${result.start -1}, type=${pageRequestDTO.type}
-                , keyword=${pageRequestDTO.keyword})}" tabindex="-1">Previous</a>
+                <a class="page-link" th:href="@{/guestbook/list(page = ${result.start -1},
+                                                                type = ${pageRequestDTO.type},
+                                                                keyword = ${pageRequestDTO.keyword})}" tabindex="-1">Previous</a>
             </li>
             <!-- Current Page -->
             <li th:class=" 'page-item ' + ${result.page == page?'active':''}" th:each="page: ${result.pageList}">
-                <a class="page-link" th:href="@{/guestbook/list(page = ${page}, type=${pageRequestDTO.type}
-                , keyword=${pageRequestDTO.keyword})}">
-                    [[${page}]]
-                </a>
+                <a class="page-link" th:href="@{/guestbook/list(page = ${page},
+                                                                type = ${pageRequestDTO.type},
+                                                                keyword = ${pageRequestDTO.keyword})}">[[${page}]]</a>
             </li>
             <!-- next -->
             <li class="page-item" th:if="${result.next}">
-                <a class="page-link" th:href="@{/guestbook/list(page = ${result.end +1}, type=${pageRequestDTO.type}
-                , keyword=${pageRequestDTO.keyword})}">Next</a>
+                <a class="page-link" th:href="@{/guestbook/list(page = ${result.end +1},
+                                                                type = ${pageRequestDTO.type},
+                                                                keyword = ${pageRequestDTO.keyword})}">Next</a>
             </li>
         </ul> <!-- Ul End -->
 
@@ -103,29 +108,33 @@
 </th:block>
     <script th:inline="javascript">
             var msg = [[${msg}]];
-            console.log(msg);
+<!--            console.log(msg);-->
             if(msg) {
                $('#modalMsg').prepend(msg);
                $('.modal-title').prepend([[${noti}]]);
                $('.modal').modal();
            }
 
-        function read(gno, page) {
+        function read(gno, page, type, keyword) {
         <!-- /*[+ ...+]*/ Thymeleaf가 적용되는 방식임을 의미 -->
+
             /*[+
-            var urlword = [[@{/guestbook/read}]] + "?gno=" + gno + "&page=" + page;
+            var urlword = [[@{/guestbook/read}]] + "?gno=" + gno + "&page=" + page + "&type=" + type + "&keyword=" + keyword;
             +]*/
             console.log(urlword);
             <!-- url 주소 입력 방식 : /*[[@{/guestbook/read}]]*/  -->
 
             location.href=urlword;
-        }
+        }  <!-- 행 클릭시 read-->
 
         var searchForm = $("#searchForm");
 
         $('.btn-search').click(function(e){
+            var selVal = $('.custom-select').val();
+            $('.custom-select').val((selVal == "------") ? "" : selVal);
             searchForm.submit();
         });
+
         $('.btn-clear').click(function(e){
             searchForm.empty().submit();
         });

@@ -67,6 +67,7 @@ class GuestbookServiceTests {
                 .type("tc")     // 검색 조건 : t(title) , c(content), w(writer) .....
                 .keyword("한글") // 검색 키워드
                 .build();
+
         PageResultDTO<GuestbookDTO, Guestbook> resultDTO = guestbookService.getList(pageRequestDTO);
 
         System.out.println("PREV  : " + resultDTO.isPrev());

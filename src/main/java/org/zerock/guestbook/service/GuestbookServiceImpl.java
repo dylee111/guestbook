@@ -48,6 +48,7 @@ public class GuestbookServiceImpl implements GuestbookService {
         // 화면에 페이지 처리와 필요한 값들을 생성.
         Pageable pageable = requestDTO.getPageable(Sort.by("gno").descending());
 
+        // 검색을 위한 객체 생성.
         BooleanBuilder booleanBuilder = getSearch(requestDTO);
 
         // JPA 처리 결과인 Page<Entity> 객체 생성.
@@ -87,16 +88,22 @@ public class GuestbookServiceImpl implements GuestbookService {
 
     private BooleanBuilder getSearch(PageRequestDTO requestDTO) {
         String type = requestDTO.getType();
+        // BooleanBuilder : 검색 조건을 적용하기 위한 객체
         BooleanBuilder booleanBuilder = new BooleanBuilder();
+        // DB와 관련된 테이블을 통해 쿼리를 날려주는 객체
         QGuestbook qGuestbook = QGuestbook.guestbook;
+
         String keyword = requestDTO.getKeyword();
-        BooleanExpression expression = qGuestbook.gno.gt(0L);
+        // BooleanExspression JPA의 처리 결과르 담고 있는 객체0
+        BooleanExpression expression = qGuestbook.gno.gt(0L); // gt : greater than
         booleanBuilder.and(expression);
 
         if(type == null || type.trim().length() == 0) { return booleanBuilder; }
 
         BooleanBuilder conditionBuilder = new BooleanBuilder();
 
+        // else if를 사용하지 않은 이유 : 만약 첫번째 if문의 조건이 만족할 경우에 else if문까지 가지 않고 조건문이 종료가 된다.
+        // 하지만 각 조건에 맞춰서 if문을 사용할 경우, 첫번째 if문이 만족해도 다음 if문까지 연산이 내려가기 때문에 모든 조건문을 읽을 수 있다.
         if(type.contains("t")) {
             conditionBuilder.or(qGuestbook.title.contains(keyword));
         }
